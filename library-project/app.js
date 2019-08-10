@@ -11,7 +11,7 @@ const path         = require('path');
 
 
 mongoose
-  .connect('mongodb://localhost/library-project', {useNewUrlParser: true})
+  .connect(`mongodb://localhost/${process.env.mongoDb}`, {useNewUrlParser: true})
   .then(x => {
     console.log(`Connected to Mongo! Database name: "${x.connections[0].name}"`)
   })
@@ -23,6 +23,8 @@ const app_name = require('./package.json').name;
 const debug = require('debug')(`${app_name}:${path.basename(__filename).split('.')[0]}`);
 
 const app = express();
+
+// const spotify_api = process.env.api_key_spot;
 
 // Middleware Setup
 app.use(logger('dev'));
@@ -49,10 +51,15 @@ app.use(favicon(path.join(__dirname, 'public', 'images', 'favicon.ico')));
 // default value for title local
 app.locals.title = 'Express - Generated with IronGenerator';
 
-
+// ALL ROUTES
 
 const index = require('./routes/index');
 app.use('/', index);
+
+// connect authorRoutes with app.js
+// const authorRoutes = require("./routes/author-routes");
+// app.use("/", authorRoutes);
+app.use("/", require("./routes/author-routes"));
 
 
 module.exports = app;
