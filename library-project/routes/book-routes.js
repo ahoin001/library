@@ -16,8 +16,11 @@ router.get("/books/new", (req, res, next) => {
 router.post("/books/create", (req, res, next) => {
   // console.log("THE FORM: ", req.body);
   Book
-    .create(req.body)  //creates new document using the req.body, which gets us form data as object , 
-    .then( newBook => console.log("NEW AUTHOR: ", newBook) )
+    .create(req.body)  //creates/saves new document using the req.body, which gets us form data as object , 
+    .then( (newBook) => {
+      console.log("NEW AUTHOR: ", newBook) 
+      res.redirect('bookViews/all-books-view');
+    })
     .catch(err => console.log("Error while creating a new author: ", err));
 
 
