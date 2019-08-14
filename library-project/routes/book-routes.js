@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-// require Author model in order to use it for CRUD
+// require book model in order to use it for CRUD
 const Book = require("../models/Book");
 
 // GET - to display the form for Creating the authors
@@ -11,12 +11,12 @@ router.get("/books/new", (req, res, next) => {
   res.render("book-views/new-book");
 });
 
-// post route to create a new author in the DB
+// post route to create a new author in the DB with form that directs to this request
 {/* <form action="/authors/create" method="post"> */}
 router.post("/books/create", (req, res, next) => {
   // console.log("THE FORM: ", req.body);
   Book
-    .create(req.body)
+    .create(req.body)  //creates new document using the req.body, which gets us form data as object , 
     .then( newBook => console.log("NEW AUTHOR: ", newBook) )
     .catch(err => console.log("Error while creating a new author: ", err));
 
