@@ -1,4 +1,5 @@
 const express = require("express");
+// TODO: Is this what allows us to export all these router paths to app.js?
 const router = express.Router();
 
 // require Author model in order to use it for CRUD

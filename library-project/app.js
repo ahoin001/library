@@ -57,5 +57,7 @@ app.use('/', index);
 // connect authorRoutes with app.js
 app.use("/", require("./routes/author-routes"));
 
+// connect book routes to app.js
+app.use("/", require("./routes/book-routes"));
 
 module.exports = app;
