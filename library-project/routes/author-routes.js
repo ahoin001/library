@@ -17,13 +17,14 @@ router.get("/authors/new", (req, res, next) => {
 // ****************************************************************************************
 
 // POST route to create a new author in the DB
+// the form is submitted from newnew author
 {/* <form action="/authors/create" method="post"> */}
 router.post("/authors/create", (req, res, next) => {
-  // console.log("THE FORM: ", req.body);
+  //console.log("THE FORM: ", req.body);
   Author
-    .create(req.body)
+    .create(req.body)     //Model method to save one document , our req.body satisfies schema so doc is created and saved
                           // take us to the page that already exist in our app
-                          //    ^       ->  this is the URL so it HAS to start with '/'
+                          //    ^       ->  this is the URL so it HAS to start with '/', redirect points to url name not our hbs file name
                           //    |      |
                           //    |      |
     .then( newAuthor => res.redirect("/authors") )
@@ -35,7 +36,8 @@ router.post("/authors/create", (req, res, next) => {
 // GET all authors from the DB
 router.get("/authors", (req, res, next) => {
   Author
-    .find()
+    .find()  //returns array of all our current author documents
+    // renders our hbs file passing it in object to use as data
     .then(authorsFromDB => res.render("author-views/allAuthors", { authors: authorsFromDB }))
     .catch(err => console.log("Error while getting the authors from the DB: ", err));
 });

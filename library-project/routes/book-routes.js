@@ -1,5 +1,5 @@
 const express = require('express');
-const router  = express.Router();
+const router = express.Router();
 
 const Book = require('../models/Book');
 const Author = require('../models/Author');
@@ -10,7 +10,12 @@ const Author = require('../models/Author');
 router.get('/books/new', (req, res, next) => {
   Author
     .find()
-    .then(allAuthors => res.render("book-views/new-book", { allAuthors }))
+    // ^ returns array of authors to use in list for book edit page 
+    .then(allAuthors => {
+      // console.log('-----------Authors for book edit',allAuthors);
+      res.render("book-views/new-book", { allAuthors })
+    })
+
     .catch(err => console.log("Error while displaying form for new book: ", err));
 });
 
@@ -34,8 +39,11 @@ router.post('/books/create', (req, res, next) => {
 // GET route to display all the books
 router.get("/books", (req, res, next) => {
   Book
-    .find()
-    .then(booksFromDB => res.render("book-views/allBooks", { booksFromDB }))
+    .find() // returns array of books
+    .then(booksFromDB => {
+      console.log(booksFromDB);
+      res.render("book-views/allBooks", { booksFromDB })
+    })
     .catch(err => console.log("error while getting all the books: ", err));
 });
 
@@ -55,13 +63,14 @@ router.post("/books/:theId/delete", (req, res, next) => {
 // GET route to display the form for updating the book
 router.get("/books/:theId/edit", (req, res, next) => {
   Book
+    // req.params.theId will be whatever this.id is of the book from allbooks.hbs
     .findById(req.params.theId)
-    .then( theBook => {
+    .then(theBook => {
       Author
         .find()
         .then(allAuthors => {
           allAuthors.forEach(theAuthor => {
-            if(theBook.author.equals(theAuthor._id)){
+            if (theBook.author.equals(theAuthor._id)) {
               // create additional key in the author object to differentiate the author that wrote this book 
               // from all the other authors
               theAuthor.isWriter = true;
@@ -72,12 +81,12 @@ router.get("/books/:theId/edit", (req, res, next) => {
         .catch(err => console.log("Error while getting all the authors: ", err));
     })
     .catch(err => console.log("Error while getting the book from DB: ", err));
-}); 
+});
 
 // ****************************************************************************************
 
 // POST route to save the updates 
-{/* <form action="/books/{{theBook._id}}/update" method="post"> */}
+{/* <form action="/books/{{theBook._id}}/update" method="post"> */ }
 router.post("/books/:id/update", (req, res, next) => {
   Book
     // find by id and pass the new req.body to replace previous document in the DB
@@ -93,9 +102,10 @@ router.post("/books/:id/update", (req, res, next) => {
 router.get("/books/:bookId", (req, res, next) => {
   Book
     .findById(req.params.bookId)
-    .populate("author") // .populate("author") => we are saying: give me all the details related to the 'author' field in the book 
-                        // (there's only author id there so what it does is-finds the rest 
-                        // of information related to that author based on the id)
+    .populate("author") 
+    // TODO  .populate("author") => we are saying: give me all the details related to the 'author' field in the book 
+    // (there's only author id there so what it does is-finds the rest 
+    // of information related to that author based on the id)
     .then(theBook => {
       // console.log("Details page : ", theBook)
       res.render("book-views/bookDetails", { theBook });
